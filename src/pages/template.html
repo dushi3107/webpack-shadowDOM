@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>翰林總庫</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- <link rel="icon" href="favicon.ico"> -->
+  <link href="../src/css/reference.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="./itembank.bundle.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a ng-if="$ctrl.authentication.isAuth" class="navbar-brand ng-scope" ui-sref="appv2.subjectList" href="#/v2/subject">
+          <i class="fa fa-flask ng-scope" ng-if="$ctrl.stage === 'test'"></i>
+          總庫
+        </a>
+      </div>
+      <div class="collapse navbar-collapse ng-scope" ng-if="$ctrl.authentication.isAuth">
+        <ul class="nav navbar-nav ng-scope" ng-if="!$ctrl.bankingContext.subject">
+          <li>
+            <a class="" ui-sref="appv2.itemSearchIndex" href="#/v2/search/item/index">
+              試題搜尋
+            </a>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="https://docs.google.com/spreadsheets/d/1wMdXRJ5IZP7osPUJMO2eo7Q9YvdjE3SyvcxcuGh9AUg/edit#gid=0"
+              target="_blank">總庫文件</a>
+          </li>
+          <li>
+            <a ui-sref="appv2.exportlog" href="#/v2/exportlog"><i class="fa fa-download"></i> 下載列表</a>
+          </li>
+          <li>
+            <a ui-sref="appv2.import.list" href="#/v2/import/list">上傳五欄記錄</a>
+          </li>
+          <li>
+            <a ui-sref="appv2.messages" href="#/v2/messages">
+              <i class="fa fa-envelope-o" aria-hidden="true"></i>
+              訊息
+              <!-- ngIf: $ctrl.messageCount --><span class="badge alert-danger ng-binding ng-scope"
+                ng-if="$ctrl.messageCount">0</span><!-- end ngIf: $ctrl.messageCount -->
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="" class="dropdown-toggle ng-binding" data-toggle="dropdown">
+              <i class="fa fa-user"></i> sysadmin <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li ng-if="$ctrl.canSwitchSite" class="ng-scope">
+                <a ui-sref="app.subjectSelect" href="#/subject-select"><i class="fa fa-reply"></i> 回舊網站</a>
+              </li><!-- end ngIf: $ctrl.canSwitchSite -->
+              <li ng-if="$ctrl.stage == 'test' || $ctrl.stage == 'development'" class="divider ng-scope"></li>
+              <li>
+                <a ng-click="$ctrl.logout()"><i class="fa fa-sign-out"></i> 登出</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="alert alert-info alert-dismissible text-center ng-scope"
+    style="margin: 0; border: 0; padding-top: 10px; padding-bottom: 5px;">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    <div>總庫改版操作見右上「總庫文件」有教育訓練文件，或請洽領域代表。<a
+        href="https://docs.google.com/spreadsheets/d/1J5HLhuAywLgEGOgW3P-6iCUN0ge_MXV7L85n4uGPEM0/edit#gid=0">窗口清單連結。</a>
+    </div>
+    <div>3/2將下架112年2月以前的重覆題、並標上內容錯誤、編輯備註有描述「*此為重複題的放棄題」</div>
+  </div>
+  <div class="container">
+    <div class="dynamic-content" id="dynamic-content">
+      <itembank-result></itembank-result>
+    </div>
+  </div>
+  <script>
+    window.onerror = function (
+      errorMsg,
+      url,
+      lineNumber,
+      columnNumber,
+      errorObject
+    ) {
+      var errMsg;
+      //check the errorObject as IE and FF don't pass it through (yet)
+      if (errorObject && errorObject !== undefined) {
+        errMsg = errorObject.message;
+      } else {
+        errMsg = errorMsg;
+      }
+      alert("Error: " + errMsg);
+    };
+  </script>
+  <ui-view></ui-view>
+  <footer class="footer">
+    <div class="container">
+      <div class="row text-muted">
+        <div class="col-md-6"><img
+            src="data:image/png;base64,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" /><br />
+          <span>
+            <small>ver 3.1.0</small>
+            <span><i class="fa fa-flask"></i>測試區</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
